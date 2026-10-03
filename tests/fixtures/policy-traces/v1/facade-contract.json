@@ -541,6 +541,17 @@
           "type": "object"
         }
       },
+      "get_scheduled_posts": {
+        "input": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        },
+        "output": {
+          "additionalProperties": true,
+          "type": "object"
+        }
+      },
       "get_sidebar_profiles": {
         "input": {
           "additionalProperties": false,
@@ -738,6 +749,42 @@
           },
           "required": [
             "changes"
+          ],
+          "type": "object"
+        },
+        "output": {
+          "additionalProperties": true,
+          "type": "object"
+        }
+      },
+      "publish_post": {
+        "input": {
+          "additionalProperties": false,
+          "properties": {
+            "confirm": {
+              "default": false,
+              "description": "Must be true to publish or schedule.",
+              "type": "boolean"
+            },
+            "schedule_at": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Optional local wall-clock time in the browser's time\nzone, ISO format without an offset, on a quarter hour, 20\nminutes to 90 days ahead, e.g. \"2026-10-06T08:30\". Omit to\npost immediately."
+            },
+            "text": {
+              "description": "The post, at most 3000 characters.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "text"
           ],
           "type": "object"
         },

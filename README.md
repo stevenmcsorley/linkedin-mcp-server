@@ -80,6 +80,8 @@ Use code <strong>FOUNDING20</strong> for 20% off your first year <a href="https:
 | `apply_profile_changes` | Apply an approved change set and verify each field. Needs `confirm=true` and `MCP_LINKEDIN_WRITE_ENABLED=true`. See [Editing your own profile](#editing-your-own-profile). |
 | `discard_profile_changes` | Discard a pending change set. |
 | `close_session` | Close the active browser session and release its resources. |
+| `publish_post` | Preview, then publish or schedule an approved post on your own feed and verify it on LinkedIn. Needs `confirm=true` and `MCP_LINKEDIN_WRITE_ENABLED=true`. See [Publishing and scheduling posts](#publishing-and-scheduling-posts). |
+| `get_scheduled_posts` | List your own scheduled posts as LinkedIn shows them. |
 
 <br/>
 <br/>
@@ -747,6 +749,30 @@ get_my_editable_profile → propose_profile_changes → preview_profile_changes
 **Full guide:** [docs/profile-editing.md](docs/profile-editing.md): setup,
 tools, examples, every result code, local records, a safe first run, and how
 to update the locators when LinkedIn changes its pages.
+
+## Publishing and scheduling posts
+
+Have your assistant draft a post or a whole campaign, see each post exactly as
+it will appear, and have LinkedIn's own scheduler queue it, with every post
+checked in LinkedIn's scheduled list afterwards.
+
+```
+publish_post(text, schedule_at)          → preview: exact text, links, "Posting at Tue, Oct 6, 8:30 AM"
+        → you approve → publish_post(..., confirm=true) → typed, read back, scheduled, verified
+```
+
+- **Same two switches** as profile editing: `MCP_LINKEDIN_WRITE_ENABLED=true`
+  on the server and `confirm: true` on the call.
+- **Exact text:** the composer's contents are read back before anything is
+  pressed; any difference discards the draft and returns `TEXT_MISMATCH`.
+- **Exact time:** `schedule_at` is local wall-clock time on a quarter hour
+  (e.g. `2026-10-06T08:30`). LinkedIn's own "Posting at ..." line must match it
+  before Confirm, or the result is `SCHEDULE_MISMATCH`.
+- **Never twice:** a local ledger (`~/.linkedin-mcp/posts/`) refuses text that
+  was already submitted (`DUPLICATE_POST`). `retry_safe: false` means the
+  button may have been pressed; check `get_scheduled_posts` first.
+
+**Full guide:** [docs/posting.md](docs/posting.md).
 
 ## Setup from Source (Develop & Contribute)
 

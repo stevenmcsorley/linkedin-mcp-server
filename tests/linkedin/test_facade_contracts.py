@@ -131,6 +131,9 @@ PROFILE_EDIT_TOOLS = {
     "preview_profile_changes",
     "apply_profile_changes",
     "discard_profile_changes",
+    # Publishing goes through `PostComposer` via `get_ready_post_composer`.
+    "publish_post",
+    "get_scheduled_posts",
 }
 
 

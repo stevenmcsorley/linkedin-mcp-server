@@ -144,6 +144,14 @@
       "description": "Apply an explicitly approved change set to your own LinkedIn profile and verify each field. Modifies LinkedIn; needs confirm=true and MCP_LINKEDIN_WRITE_ENABLED=true"
     },
     {
+      "name": "publish_post",
+      "description": "Preview, then publish or schedule an approved post on your own LinkedIn feed and verify it. Modifies LinkedIn only with confirm=true and MCP_LINKEDIN_WRITE_ENABLED=true"
+    },
+    {
+      "name": "get_scheduled_posts",
+      "description": "List your own scheduled LinkedIn posts. Does not modify LinkedIn"
+    },
+    {
       "name": "discard_profile_changes",
       "description": "Discard a pending change set so it can never be applied"
     },

@@ -53,6 +53,7 @@ from linkedin_mcp_server.tools.messaging import register_messaging_tools
 from linkedin_mcp_server.tools.person import register_person_tools
 from linkedin_mcp_server.tools.post import register_post_tools
 from linkedin_mcp_server.tools.profile_edit import register_profile_edit_tools
+from linkedin_mcp_server.tools.publishing import register_publishing_tools
 
 if TYPE_CHECKING:
     from linkedin_mcp_server.daemon_proxy import DaemonProxyBackend
@@ -295,6 +296,7 @@ def create_mcp_server(
         register_feed_tools(mcp, tool_timeout=tool_timeout)
         register_post_tools(mcp, tool_timeout=tool_timeout)
         register_profile_edit_tools(mcp, tool_timeout=tool_timeout)
+        register_publishing_tools(mcp, tool_timeout=tool_timeout)
 
         # Inside the gate with the rest, and easy to miss because it is the one
         # tool defined here rather than in a `register_*` call. Left out of the

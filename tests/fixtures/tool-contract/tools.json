@@ -673,6 +673,31 @@
     "_meta": {
       "fastmcp": {
         "tags": [
+          "post"
+        ]
+      }
+    },
+    "annotations": {
+      "openWorldHint": true,
+      "readOnlyHint": true
+    },
+    "description": "List your own scheduled LinkedIn posts, as LinkedIn's scheduled list shows them.\n\nOpens the share composer's scheduled-posts view, returns its text,\nand closes the composer without saving anything. Also returns this\nserver's local record of posts it submitted.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {},
+      "type": "object"
+    },
+    "name": "get_scheduled_posts",
+    "outputSchema": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "title": "Get Scheduled Posts"
+  },
+  {
+    "_meta": {
+      "fastmcp": {
+        "tags": [
           "person"
         ]
       }
@@ -915,6 +940,57 @@
       "type": "object"
     },
     "title": "Propose Profile Changes"
+  },
+  {
+    "_meta": {
+      "fastmcp": {
+        "tags": [
+          "post",
+          "write"
+        ]
+      }
+    },
+    "annotations": {
+      "destructiveHint": true,
+      "openWorldHint": true
+    },
+    "description": "Publish or schedule a post on your own LinkedIn feed, only with approval.\n\nWithout confirm=true this is a dry run: it returns the exact text,\ncharacter count, links and when it would go out (in LinkedIn's own\n\"Posting at Tue, Oct 6, 8:30 AM\" wording) and changes nothing. Show\nthat preview to the user; call again with confirm=true only after they\napprove it. Writing also needs MCP_LINKEDIN_WRITE_ENABLED=true.\n\nOnly post text the user wrote or approved word for word. The text is\ntyped as given (paragraphs separated by a blank line), read back from\nthe composer, and refused on any difference. The post uses the\naccount's default audience, which the result reports.",
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "confirm": {
+          "default": false,
+          "description": "Must be true to publish or schedule.",
+          "type": "boolean"
+        },
+        "schedule_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional local wall-clock time in the browser's time\nzone, ISO format without an offset, on a quarter hour, 20\nminutes to 90 days ahead, e.g. \"2026-10-06T08:30\". Omit to\npost immediately."
+        },
+        "text": {
+          "description": "The post, at most 3000 characters.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    },
+    "name": "publish_post",
+    "outputSchema": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "title": "Publish Post"
   },
   {
     "_meta": {

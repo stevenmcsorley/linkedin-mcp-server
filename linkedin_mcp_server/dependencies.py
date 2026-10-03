@@ -34,6 +34,7 @@ from patchright.async_api import Page
 from linkedin_mcp_server.linkedin import LinkedInExtractor
 from linkedin_mcp_server.linkedin.navigation import PageNavigator
 from linkedin_mcp_server.linkedin.profile_editor import ProfileEditor
+from linkedin_mcp_server.linkedin.post_composer import PostComposer
 from linkedin_mcp_server.linkedin.session import PageSession
 from linkedin_mcp_server.server_role import (
     ServerRole,
@@ -186,6 +187,20 @@ async def get_ready_profile_editor(
     """
     session = PageSession(await _get_ready_page(ctx, tool_name=tool_name))
     return ProfileEditor(session, PageNavigator(session))
+
+
+async def get_ready_post_composer(
+    ctx: Context | None,
+    *,
+    tool_name: str,
+) -> PostComposer:
+    """The same gating as :func:`get_ready_extractor`, for the share composer.
+
+    Like profile editing, publishing is a separate workflow with its own
+    approval model, kept outside the pinned extractor facade.
+    """
+    session = PageSession(await _get_ready_page(ctx, tool_name=tool_name))
+    return PostComposer(session, PageNavigator(session))
 
 
 async def _get_ready_page(ctx: Context | None, *, tool_name: str) -> Page:

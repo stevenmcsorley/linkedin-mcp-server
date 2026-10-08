@@ -72,7 +72,9 @@ READ ──► PROPOSE ──► PREVIEW ──► APPLY (you approve) ──►
    `AMBIGUOUS_EXPERIENCE` with the candidates. A `startDate` is matched against
    the start of each position's date range only.
 6. **No truncation.** Text over a limit is refused with its length, the limit
-   and the overflow. Limits are read from LinkedIn's form where it states them
+   and the overflow, counted in UTF-16 code units to match browser `maxlength`
+   and JavaScript string lengths (an emoji outside the BMP consumes two units).
+   Limits are read from LinkedIn's form where it states them
    (the description field says "maximum 2,000 characters").
 7. **Exact skills only.** A skill is added only when LinkedIn's own suggestion
    list contains that exact name; its spelling is kept (`reactjs` → `React.js`).

@@ -41,6 +41,7 @@ from linkedin_mcp_server.profile_edit.model import (
     OwnProfile,
     Skill,
     TextField,
+    browser_text_length,
     normalize_text,
 )
 from linkedin_mcp_server.profile_edit.store import ProfileEditStore
@@ -718,9 +719,10 @@ class ProfileEditService:
         sections = list(dict.fromkeys(c.section for c in cs.changes))
         warnings = list(cs.warnings)
         for c in cs.changes:
-            if c.after and c.max_length and len(c.after) > 0.9 * c.max_length:
+            length = browser_text_length(c.after or "")
+            if c.after and c.max_length and length > 0.9 * c.max_length:
                 warnings.append(
-                    f"{c.label}: {len(c.after)}/{c.max_length} characters, close to LinkedIn's limit."
+                    f"{c.label}: {length}/{c.max_length} UTF-16 code units, close to LinkedIn's limit."
                 )
         return {
             "changeSetId": cs.id,

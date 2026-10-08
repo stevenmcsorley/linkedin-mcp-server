@@ -80,6 +80,28 @@ class TestPlanning:
             build(headline("x" * 150, limit=120))
         build(about("y" * 2600))  # exactly at the default About limit is fine
 
+    @pytest.mark.parametrize("make_request", [headline, about])
+    def test_non_bmp_text_over_the_browser_limit_is_refused(self, make_request):
+        # Five Python code points, but six UTF-16 code units in a web form.
+        with pytest.raises(ProfileEditError) as error:
+            build(make_request("abcd\U0001f680", limit=5))
+        assert error.value.details["problems"] == [
+            {
+                "field": "Headline" if make_request is headline else "About",
+                "reason": "too long",
+                "proposedLength": 6,
+                "allowedLength": 5,
+                "overflow": 1,
+            }
+        ]
+
+    @pytest.mark.parametrize(
+        "value", ["abc\U0001f680", "\U0001f680\U0001f680a", "caf\u00e9x"]
+    )
+    def test_unicode_at_the_browser_limit_is_preserved(self, value):
+        change_set = build(headline(value, limit=5))
+        assert change_set.changes[0].after == value
+
     def test_the_default_limit_applies_when_the_form_reports_none(self):
         with pytest.raises(ProfileEditError) as e:
             build(about("y" * 2601, limit=None))

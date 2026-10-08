@@ -26,6 +26,7 @@ from linkedin_mcp_server.profile_edit.errors import (
 from linkedin_mcp_server.profile_edit.model import (
     DEFAULT_LIMITS,
     SINGLE_LINE,
+    browser_text_length,
     normalize_text,
 )
 
@@ -227,14 +228,17 @@ def _check_text(
 
 
 def _length_problem(label: str, value: str, limit: int) -> dict[str, Any] | None:
-    if len(value) <= limit:
+    # Browser maxlength and JavaScript string.length count UTF-16 code units,
+    # so a non-BMP character consumes two units even though Python len says one.
+    length = browser_text_length(value)
+    if length <= limit:
         return None
     return {
         "field": label,
         "reason": "too long",
-        "proposedLength": len(value),
+        "proposedLength": length,
         "allowedLength": limit,
-        "overflow": len(value) - limit,
+        "overflow": length - limit,
     }
 
 

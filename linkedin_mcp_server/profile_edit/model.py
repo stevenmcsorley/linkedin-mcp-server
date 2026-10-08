@@ -28,6 +28,11 @@ DEFAULT_LIMITS: dict[str, int] = {
 SINGLE_LINE = frozenset({"headline", "experience_title", "skill"})
 
 
+def browser_text_length(value: str) -> int:
+    """Count UTF-16 code units, as browser maxlength and JS string.length do."""
+    return sum(2 if ord(character) > 0xFFFF else 1 for character in value)
+
+
 def normalize_text(value: str) -> str:
     """The form of a value we propose, write and compare.
 

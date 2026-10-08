@@ -79,6 +79,22 @@ class TestRead:
 
 
 class TestPropose:
+    @pytest.mark.parametrize(
+        "emoji_count, warns", [(99, False), (100, True), (110, True)]
+    )
+    async def test_unicode_limit_warnings_use_the_same_units_as_validation(
+        self, store, emoji_count, warns
+    ):
+        editor = FakeEditor()
+        out = await service(editor, store).propose(
+            Proposal(headline="\U0001f680" * emoji_count)
+        )
+        near_limit = [w for w in out["warnings"] if "close to" in w]
+        assert bool(near_limit) is warns
+        if warns:
+            assert f"{emoji_count * 2}/220 UTF-16 code units" in near_limit[0]
+        assert editor.writes == []
+
     async def test_proposing_changes_nothing_on_linkedin_and_stores_the_change_set(
         self, store
     ):
